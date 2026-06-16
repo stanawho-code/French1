@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d4ed8">
+<title>法语 A1 课堂</title>
+<style>
+  :root{
+    --bg:#f5f5f0;--card:#ffffff;--text:#1c1c1a;--muted:#6b6b66;--line:#e3e3dc;
+    --accent:#1d4ed8;--accent-soft:#e8eeff;--ok:#0f7a4d;--ok-soft:#e3f5ec;
+    --bad:#c0392b;--bad-soft:#fbeaea;--amber:#b9770a;--amber-soft:#fdf1dc;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  .wrap{max-width:680px;margin:0 auto;padding:16px 16px 80px}
+  header.top{position:sticky;top:0;background:var(--bg);padding:12px 16px;z-index:10;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  header.top h1{font-size:18px;margin:0;font-weight:600;flex:1}
+  .back{border:none;background:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px 8px;border-radius:8px}
+  .back:active{background:var(--line)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stat{background:var(--accent-soft);border-radius:12px;padding:10px 6px;text-align:center}
+  .stat .v{font-size:22px;font-weight:700;color:var(--accent)}
+  .stat .l{font-size:11px;color:var(--muted)}
+  .prog{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:10px}
+  .prog>span{display:block;height:100%;background:var(--accent);transition:width .4s}
+  .unit{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;cursor:pointer}
+  .unit:active{background:var(--accent-soft)}
+  .unit .num{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+  .unit .done{background:var(--ok-soft);color:var(--ok)}
+  .unit .t{flex:1}
+  .unit .t .ti{font-weight:600;font-size:15px}
+  .unit .t .ds{font-size:12px;color:var(--muted)}
+  .lesson{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+  .lesson:last-child{border-bottom:none}
+  .lesson:active{background:var(--accent-soft)}
+  .lesson .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .lesson .dot.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+  .lesson .lt{flex:1;font-size:14px}
+  .lesson .pct{font-size:12px;color:var(--muted)}
+  .btn{display:block;width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px}
+  .btn:active{opacity:.85}
+  .btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  .flash{text-align:center;padding:28px 18px}
+  .flash .fr{font-size:30px;font-weight:700;letter-spacing:.5px}
+  .flash .en{font-size:14px;color:var(--muted);margin-top:4px}
+  .flash .zh{font-size:19px;margin-top:10px}
+  .tip{background:var(--amber-soft);color:#7a4e06;border-radius:12px;padding:12px;font-size:14px;text-align:left;margin-top:14px}
+  .speak{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 16px;border-radius:30px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-size:15px;cursor:pointer}
+  .speak:active{opacity:.7}
+  .opt{display:block;width:100%;text-align:left;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:16px;cursor:pointer;margin-bottom:10px}
+  .opt:active{background:var(--accent-soft)}
+  .opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+  .qmeta{font-size:13px;color:var(--muted);margin-bottom:6px}
+  .qtext{font-size:18px;font-weight:600;margin-bottom:16px}
+  .res{text-align:center;padding:20px}
+  .res .big{font-size:48px;font-weight:800;color:var(--accent);margin:8px 0}
+  .ex{background:var(--accent-soft);border-radius:12px;padding:12px;font-size:14px;margin-top:12px}
+  .tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent);margin-bottom:8px}
+  table.ref{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  table.ref td,table.ref th{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  table.ref th{background:var(--accent-soft);color:var(--accent)}
+  .footer{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 0}
+  .footer button{border:none;background:none;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px}
+  .footer button.active{color:var(--accent)}
+  .footer .ic{font-size:20px}
+  h2.sec{font-size:16px;margin:18px 0 8px}
+  .word{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+  .word:last-child{border:none}
+  .word .l{flex:1}
+  .word .l b{font-size:16px}
+  .word .l span{font-size:13px;color:var(--muted);margin-left:8px}
+  .mini{border:none;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:6px 10px;font-size:14px;cursor:pointer}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="back" id="back" style="display:none">‹</button>
+  <h1 id="title">法语 A1 课堂</h1>
+</header>
+<div class="wrap" id="app"></div>
+<div class="footer">
+  <button data-nav="home" class="active"><span class="ic">🏠</span>课程</button>
+  <button data-nav="vocab"><span class="ic">📖</span>词汇</button>
+  <button data-nav="grammar"><span class="ic">📐</span>语法</button>
+  <button data-nav="review"><span class="ic">🔁</span>复习</button>
+</div>
+
+<script>
+/* ============ 法语朗读（离线，调用系统法语语音） ============ */
+function speak(t){
+  if(!window.speechSynthesis){alert("当前浏览器不支持朗读");return;}
+  var u=new SpeechSynthesisUtterance(t);
+  u.lang="fr-FR";u.rate=0.82;
+  var vs=speechSynthesis.getVoices().filter(function(v){return /fr/i.test(v.lang)});
+  if(vs[0])u.voice=vs[0];
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=function(){};
+
+/* ============ 进度存储 ============ */
+var KEY="fr_a1_full_v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}}
+var DB=load();
+if(!DB.scores)DB.scores={};      /* lessonId -> {correct,total} */
+if(!DB.wrong)DB.wrong=[];        /* 错题库 */
+
+/* ============ 全部 A1 课程数据 ============ */
+var UNITS=[
+ {id:"u0",title:"发音入门",desc:"字母 · 鼻化音 · 符号",lessons:[
+   {id:"l01",title:"字母表与读音规则",
+    cards:[
+     {fr:"l'alphabet",zh:"法语 26 个字母，和英语相同，但读法不同",tip:"点🔊听整套字母歌的感觉。重点：法语单词词末的辅音常不发音（Paris 的 s 不读）",say:"a b c d e f g"},
+     {fr:"bonjour",zh:"你好（白天）",tip:"j 读 /ʒ/ 像「日」，r 是小舌音从喉咙发出",say:"bonjour"},
+     {fr:"merci",zh:"谢谢",tip:"重音永远在最后一个音节，节奏均匀",say:"merci"},
+     {fr:"au revoir",zh:"再见",tip:"au 读「哦」，oi 读「瓦」→ r-瓦",say:"au revoir"}
+    ],
+    quiz:[
+     {q:"法语单词词末的辅音通常？",o:["重读","不发音","拉长"],a:1,ex:"如 Paris、petit 的词末辅音多不发音。"},
+     {q:"法语的重音位置在？",o:["第一个音节","最后一个音节","随意"],a:1,ex:"法语重音固定落在最后音节。"},
+     {q:"merci 的意思？",o:["你好","谢谢","再见"],a:1}
+    ]},
+   {id:"l02",title:"鼻化音（你的薄弱点）",
+    cards:[
+     {fr:"vin",zh:"葡萄酒 — in 读鼻化音 /ɛ̃/，像「安」带鼻音",tip:"气流从鼻腔出，嘴不闭。这是法语最大特色",say:"vin"},
+     {fr:"bon",zh:"好的 — on 读 /ɔ̃/，像「翁」带鼻音",tip:"嘴圆，鼻音",say:"bon"},
+     {fr:"blanc",zh:"白色 — an 读 /ɑ̃/，像「昂」带鼻音",tip:"嘴张大",say:"blanc"},
+     {fr:"un",zh:"一(阳性) — un 读 /œ̃/，像「俺」带鼻音",tip:"四大鼻化音：in/on/an/un",say:"un"}
+    ],
+    quiz:[
+     {q:"vin 里的 in 怎么读？",o:["像「印」清辅音","鼻化音 /ɛ̃/「安」","不发音"],a:1,ex:"鼻化音，气流走鼻腔。"},
+     {q:"bon 的 on 是？",o:["鼻化音「翁」","「邦」","「波恩」"],a:0},
+     {q:"blanc（白色）结尾的 c？",o:["读 k","不发音","读 s"],a:1,ex:"an 鼻化，词末 c 不发音。"}
+    ]},
+   {id:"l03",title:"重音符号 accents",
+    cards:[
+     {fr:"é",zh:"闭口 e，像「诶」— café 咖啡",tip:"accent aigu（向右上）",say:"café"},
+     {fr:"è",zh:"开口 e，像「ɛ」— mère 妈妈",tip:"accent grave（向左上）",say:"mère"},
+     {fr:"ç",zh:"读 /s/ — français 法语的/法国人",tip:"cédille，让 c 在 a/o/u 前也读 s",say:"français"},
+     {fr:"ê",zh:"长开口 e — être 是",tip:"accent circonflexe（小帽子），常代表古法语丢失的 s",say:"être"}
+    ],
+    quiz:[
+     {q:"café 里的 é 读？",o:["像「诶」闭口e","不发音","像「啊」"],a:0},
+     {q:"ç 的读音？",o:["/k/","/s/","/ʃ/"],a:1,ex:"français 读「弗朗赛」。"},
+     {q:"être 的意思？",o:["有","是","去"],a:1}
+    ]}
+ ]},
+
+ {id:"u1",title:"同源词速成",desc:"你已会的几百个法语词",lessons:[
+   {id:"l11",title:"-tion 家族（全阴性）",
+    cards:[
+     {fr:"information",zh:"信息 — 和英语拼写几乎一样",tip:"-tion 读 /sjɔ̃/「西翁」，且 99% 是阴性 la",say:"information"},
+     {fr:"la situation",zh:"情况",say:"la situation"},
+     {fr:"la question",zh:"问题",say:"la question"},
+     {fr:"la solution",zh:"解决方案",say:"la solution"}
+    ],
+    quiz:[
+     {q:"-tion 结尾的词性别？",o:["阳性 le","阴性 la"],a:1,ex:"几乎全是阴性。"},
+     {q:"information 意思？",o:["信息","危险","邀请"],a:0},
+     {q:"-tion 的读音最接近？",o:["「兴」","「西翁」/sjɔ̃/","「神」"],a:1},
+     {q:"solution 意思？",o:["孤独","解决方案","太阳"],a:1}
+    ]},
+   {id:"l12",title:"-able / -ible 形容词",
+    cards:[
+     {fr:"possible",zh:"可能的",tip:"英语 -able/-ible → 法语基本不变，且都是形容词",say:"possible"},
+     {fr:"confortable",zh:"舒适的（英语 comfortable 少一个 m）",say:"confortable"},
+     {fr:"responsable",zh:"负责任的",say:"responsable"}
+    ],
+    quiz:[
+     {q:"看到 -able/-ible 结尾，是？",o:["动词","形容词","名词"],a:1},
+     {q:"comfortable 的法语？",o:["comfortable","confortable","komfortabel"],a:1},
+     {q:"possible 意思？",o:["可能的","邮政的","贫穷的"],a:0}
+    ]},
+   {id:"l13",title:"-ique 家族（英语 -ic）",
+    cards:[
+     {fr:"la musique",zh:"音乐（music）",tip:"英语 -ic → 法语 -ique",say:"la musique"},
+     {fr:"classique",zh:"经典的（classic）",say:"classique"},
+     {fr:"logique",zh:"合乎逻辑的（logical）",say:"logique"}
+    ],
+    quiz:[
+     {q:"music 的法语？",o:["musik","musique","muzic"],a:1},
+     {q:"logique 意思？",o:["逻辑的","遥远的","懒惰的"],a:0}
+    ]},
+   {id:"l14",title:"否定前缀 in-/im-/mal-/dé-",
+    cards:[
+     {fr:"injuste",zh:"不公正的（juste 公正 + in-）",tip:"in-/im- = 否定，前缀改词义",say:"injuste"},
+     {fr:"impossible",zh:"不可能的（p 前用 im-）",say:"impossible"},
+     {fr:"malheureux",zh:"不幸的（heureux 幸福 + mal-）",say:"malheureux"}
+    ],
+    quiz:[
+     {q:"juste→injuste，in- 表示？",o:["更","否定","再"],a:1},
+     {q:"possible 加什么变「不可能」？",o:["im-","re-","dé-"],a:0},
+     {q:"前缀的作用？",o:["改变词义","决定性别","表时间"],a:0}
+    ]}
+ ]},
+
+ {id:"u2",title:"问候与自我介绍",desc:"开口说第一句法语",lessons:[
+   {id:"l21",title:"问候与礼貌用语",
+    cards:[
+     {fr:"Bonjour ! Ça va ?",zh:"你好！你好吗？",say:"Bonjour, ça va ?"},
+     {fr:"Ça va bien, merci.",zh:"我很好，谢谢。",say:"Ça va bien, merci."},
+     {fr:"S'il vous plaît",zh:"请（礼貌）",say:"s'il vous plaît"},
+     {fr:"Excusez-moi",zh:"打扰一下/对不起",say:"excusez-moi"}
+    ],
+    quiz:[
+     {q:"「你好吗」怎么说？",o:["Merci","Ça va ?","Au revoir"],a:1},
+     {q:"「请」(礼貌)？",o:["s'il vous plaît","pardon","bonsoir"],a:0},
+     {q:"晚上见面说？",o:["Bonjour","Bonsoir","Bonne nuit"],a:1,ex:"Bonsoir 晚上好；Bonne nuit 是睡前晚安。"}
+    ]},
+   {id:"l22",title:"主语人称代词",
+    cards:[
+     {fr:"je · tu · il / elle",zh:"我 · 你 · 他/她",tip:"il=他/它(阳)，elle=她/它(阴)",say:"je, tu, il, elle"},
+     {fr:"nous · vous · ils / elles",zh:"我们 · 你们/您 · 他们/她们",tip:"vous 也是礼貌的「您」",say:"nous, vous, ils, elles"}
+    ],
+    quiz:[
+     {q:"「您」(礼貌单数)用？",o:["tu","vous","il"],a:1},
+     {q:"elle 指？",o:["他","她/它(阴)","我们"],a:1},
+     {q:"「我们」？",o:["nous","vous","ils"],a:0}
+    ]},
+   {id:"l23",title:"être（是）变位",
+    cards:[
+     {fr:"je suis · tu es · il est",zh:"我是·你是·他是",say:"je suis, tu es, il est"},
+     {fr:"nous sommes · vous êtes · ils sont",zh:"我们是·你们是·他们是",say:"nous sommes, vous êtes, ils sont"},
+     {fr:"Je suis chinois(e).",zh:"我是中国人。",tip:"女生加 e：chinoise",say:"Je suis chinoise."}
+    ],
+    quiz:[
+     {q:"「我是」？",o:["j'ai","je suis","je es"],a:1},
+     {q:"il ___ français",o:["est","es","a"],a:0},
+     {q:"「你们是/您是」？",o:["vous êtes","vous sommes","tu es"],a:0},
+     {q:"女生说「我是中国人」？",o:["je suis chinois","je suis chinoise"],a:1}
+    ]},
+   {id:"l24",title:"国籍与职业",
+    cards:[
+     {fr:"Je suis étudiant(e).",zh:"我是学生。",tip:"职业前不加冠词：Je suis professeur",say:"Je suis étudiante."},
+     {fr:"Je travaille à Paris.",zh:"我在巴黎工作。",say:"Je travaille à Paris."},
+     {fr:"Comment vous appelez-vous ?",zh:"您叫什么名字？",say:"Comment vous appelez-vous ?"}
+    ],
+    quiz:[
+     {q:"说职业「我是老师」？",o:["Je suis un professeur","Je suis professeur"],a:1,ex:"职业前不加冠词。"},
+     {q:"「您叫什么名字」？",o:["Comment vous appelez-vous ?","Où allez-vous ?"],a:0}
+    ]}
+ ]},
+
+ {id:"u3",title:"avoir 与冠词",desc:"拥有 · le/la · 名词性别",lessons:[
+   {id:"l31",title:"avoir（有）变位",
+    cards:[
+     {fr:"j'ai · tu as · il a",zh:"我有·你有·他有",say:"j'ai, tu as, il a"},
+     {fr:"nous avons · vous avez · ils ont",zh:"我们有·你们有·他们有",say:"nous avons, vous avez, ils ont"},
+     {fr:"J'ai 25 ans.",zh:"我25岁。",tip:"法语说年龄用 avoir「有…岁」",say:"J'ai vingt-cinq ans."}
+    ],
+    quiz:[
+     {q:"「我有一只猫」？",o:["je suis un chat","j'ai un chat"],a:1},
+     {q:"说年龄用哪个动词？",o:["être 是","avoir 有"],a:1,ex:"J'ai 25 ans = 直译「我有25岁」。"},
+     {q:"「他们有」？",o:["ils ont","ils sont","ils a"],a:0}
+    ]},
+   {id:"l32",title:"定冠词 le / la / les",
+    cards:[
+     {fr:"le livre",zh:"这本书（阳性）",tip:"le 阳性 · la 阴性 · les 复数",say:"le livre"},
+     {fr:"la table",zh:"这张桌子（阴性）",say:"la table"},
+     {fr:"les livres",zh:"这些书（复数，名词加 s）",say:"les livres"},
+     {fr:"l'eau",zh:"水（元音开头用 l'）",tip:"eau 是「水」不是「吃」！",say:"l'eau"}
+    ],
+    quiz:[
+     {q:"阴性单数定冠词？",o:["le","la","les"],a:1},
+     {q:"元音开头的名词用？",o:["le/la","l'","les"],a:1,ex:"l'eau, l'ami。"},
+     {q:"eau 意思？",o:["水","吃","蛋"],a:0}
+    ]},
+   {id:"l33",title:"不定冠词 un / une / des",
+    cards:[
+     {fr:"un café",zh:"一杯咖啡（阳性 一个）",tip:"un 阳 · une 阴 · des 复数(一些)",say:"un café"},
+     {fr:"une pomme",zh:"一个苹果（阴性）",say:"une pomme"},
+     {fr:"des amis",zh:"一些朋友",say:"des amis"}
+    ],
+    quiz:[
+     {q:"「一个苹果(阴)」？",o:["un pomme","une pomme"],a:1},
+     {q:"des 表示？",o:["这（特指）","一些（复数）","没有"],a:1}
+    ]},
+   {id:"l34",title:"名词性别规律（看后缀判断）",
+    cards:[
+     {fr:"-tion / -té / -ette → 阴性",zh:"la nation, la liberté, la cigarette",say:"la nation, la liberté"},
+     {fr:"-ment / -age / -eau → 阳性",zh:"le moment, le fromage, le bureau",say:"le moment, le bureau"},
+     {fr:"-eur 职业：阳性，加 -euse 变阴",zh:"le chanteur / la chanteuse",say:"le chanteur, la chanteuse"}
+    ],
+    quiz:[
+     {q:"liberté（自由）性别？",o:["阳性 le","阴性 la"],a:1,ex:"-té → 阴性。"},
+     {q:"fromage（奶酪）？",o:["le fromage","la fromage"],a:0,ex:"-age → 阳性。"},
+     {q:"后缀的一个作用是？",o:["改词义","暗示性别/词性","表否定"],a:1}
+    ]}
+ ]},
+
+ {id:"u4",title:"动词系统",desc:"-er · -ir · 不规则",lessons:[
+   {id:"l41",title:"-er 动词（90%动词）",
+    cards:[
+     {fr:"parler：je parle, tu parles, il parle",zh:"说：去 -er 加 -e/-es/-e",say:"je parle, tu parles, il parle"},
+     {fr:"nous parlons, vous parlez, ils parlent",zh:"词尾 -ons/-ez/-ent",tip:"ils parlent 的 -ent 不发音！",say:"nous parlons, vous parlez, ils parlent"},
+     {fr:"J'adore le sport.",zh:"我超爱运动。",tip:"动词后名词要带冠词 le/la",say:"J'adore le sport."}
+    ],
+    quiz:[
+     {q:"je + parler →",o:["je parle","je parles","je parler"],a:0},
+     {q:"nous + parler →",o:["parlez","parlons","parlent"],a:1},
+     {q:"「我爱运动」正确？",o:["j'adore sport","j'adore le sport"],a:1},
+     {q:"ils parlent 的 -ent？",o:["读「昂」","不发音","读「特」"],a:1}
+    ]},
+   {id:"l42",title:"-ir 动词（finir 型）",
+    cards:[
+     {fr:"finir：je finis, tu finis, il finit",zh:"完成",say:"je finis, tu finis, il finit"},
+     {fr:"nous finissons, vous finissez, ils finissent",zh:"复数加 -iss-",tip:"choisir 选择、grandir 长大 同型",say:"nous finissons, ils finissent"}
+    ],
+    quiz:[
+     {q:"je + finir →",o:["je finis","je finit","je finir"],a:0},
+     {q:"nous finir →",o:["finons","finissons","finez"],a:1}
+    ]},
+   {id:"l43",title:"高频不规则：aller / faire / prendre",
+    cards:[
+     {fr:"aller 去：je vais, tu vas, il va, nous allons, vous allez, ils vont",zh:"去",say:"je vais, tu vas, il va, ils vont"},
+     {fr:"faire 做：je fais, tu fais, il fait, nous faisons, vous faites, ils font",zh:"做",say:"je fais, il fait, ils font"},
+     {fr:"prendre 拿/乘：je prends, il prend, nous prenons, ils prennent",zh:"拿、乘坐",say:"je prends, nous prenons"}
+    ],
+    quiz:[
+     {q:"「我去」？",o:["je vais","je vas","je va"],a:0},
+     {q:"「他做」？",o:["il fait","il fais","il font"],a:0},
+     {q:"「我乘地铁」je ___ le métro",o:["prends","prend","prennent"],a:0}
+    ]}
+ ]},
+
+ {id:"u5",title:"否定与疑问",desc:"说不 · 提问",lessons:[
+   {id:"l51",title:"否定 ne ... pas",
+    cards:[
+     {fr:"Je ne parle pas anglais.",zh:"我不说英语。",tip:"把动词夹在 ne...pas 中间",say:"Je ne parle pas anglais."},
+     {fr:"Je n'ai pas de chat.",zh:"我没有猫。",tip:"元音前 ne→n'；否定后 un/une/des 变 de",say:"Je n'ai pas de chat."}
+    ],
+    quiz:[
+     {q:"否定结构是？",o:["ne...pas 夹动词","pas...ne","ne 放句末"],a:0},
+     {q:"「我没有猫」？",o:["je n'ai pas un chat","je n'ai pas de chat"],a:1,ex:"否定后冠词变 de。"}
+    ]},
+   {id:"l52",title:"三种提问方式",
+    cards:[
+     {fr:"Tu parles français ?",zh:"①升调：句尾语调上扬（最口语）",say:"Tu parles français ?"},
+     {fr:"Est-ce que tu parles français ?",zh:"②加 Est-ce que 开头（最常用）",say:"Est-ce que tu parles français ?"},
+     {fr:"Parles-tu français ?",zh:"③主谓倒装（最正式）",say:"Parles-tu français ?"}
+    ],
+    quiz:[
+     {q:"最常用的提问开头词？",o:["Est-ce que","Pourquoi","Voilà"],a:0},
+     {q:"最口语的提问方式？",o:["倒装","句尾升调","加 que"],a:1}
+    ]},
+   {id:"l53",title:"疑问词",
+    cards:[
+     {fr:"qui · que · où",zh:"谁 · 什么 · 哪里",say:"qui, que, où"},
+     {fr:"quand · comment · pourquoi",zh:"何时 · 怎样 · 为什么",say:"quand, comment, pourquoi"},
+     {fr:"combien",zh:"多少",tip:"Combien ça coûte ? 多少钱？",say:"Combien ça coûte ?"}
+    ],
+    quiz:[
+     {q:"「哪里」？",o:["où","qui","quand"],a:0},
+     {q:"「为什么」？",o:["comment","pourquoi","combien"],a:1},
+     {q:"「多少钱」Combien ça ___ ?",o:["coûte","mange","va"],a:0}
+    ]}
+ ]},
+
+ {id:"u6",title:"形容词与所有格",desc:"性数配合 · mon/ma",lessons:[
+   {id:"l61",title:"形容词性数配合与位置",
+    cards:[
+     {fr:"un grand jardin / une grande maison",zh:"形容词随名词变阴阳：阴性加 e",tip:"多数形容词放名词后；grand/petit/beau 等放前",say:"un grand jardin, une grande maison"},
+     {fr:"des fleurs rouges",zh:"复数加 s：红色的花",say:"des fleurs rouges"}
+    ],
+    quiz:[
+     {q:"形容词阴性通常？",o:["不变","加 e","加 s"],a:1},
+     {q:"颜色形容词一般放？",o:["名词前","名词后"],a:1,ex:"une voiture rouge。"}
+    ]},
+   {id:"l62",title:"所有格 mon / ma / mes",
+    cards:[
+     {fr:"mon père · ma mère · mes parents",zh:"我的爸爸·我的妈妈·我的父母",tip:"看被拥有物的性数，不看「我」",say:"mon père, ma mère, mes parents"},
+     {fr:"ton / ta / tes · son / sa / ses",zh:"你的 · 他/她的",say:"ton, ta, tes, son, sa, ses"}
+    ],
+    quiz:[
+     {q:"「我的妈妈」(阴)？",o:["mon mère","ma mère","mes mère"],a:1},
+     {q:"mon/ma/mes 的选择看？",o:["拥有者性别","被拥有物的性数"],a:1,ex:"所以「她的爸爸」也是 son père。"}
+    ]},
+   {id:"l63",title:"颜色 les couleurs",
+    cards:[
+     {fr:"rouge · bleu · vert",zh:"红 · 蓝 · 绿",say:"rouge, bleu, vert"},
+     {fr:"jaune · noir · blanc",zh:"黄 · 黑 · 白",say:"jaune, noir, blanc"}
+    ],
+    quiz:[
+     {q:"rouge 是？",o:["红","蓝","绿"],a:0},
+     {q:"blanc 是？",o:["黑","白","黄"],a:1}
+    ]}
+ ]},
+
+ {id:"u7",title:"数字·时间·日期",desc:"补你的拼写薄弱点",lessons:[
+   {id:"l71",title:"数字 0–20（含拼写）",
+    cards:[
+     {fr:"zéro un deux trois quatre cinq",zh:"0-5（注意 quatre=4！）",say:"zéro, un, deux, trois, quatre, cinq"},
+     {fr:"six sept huit neuf dix",zh:"6-10（huit=8！）",say:"six, sept, huit, neuf, dix"},
+     {fr:"onze douze treize ... vingt",zh:"11-20",say:"onze, douze, treize, quatorze, quinze"}
+    ],
+    quiz:[
+     {q:"「4」？",o:["quatre","quartre","catre"],a:0},
+     {q:"「8」？",o:["huit","huite","huet"],a:0},
+     {q:"「2」？",o:["due","deux","deu"],a:1},
+     {q:"「10」？",o:["dis","dix","dees"],a:1}
+    ]},
+   {id:"l72",title:"数字 70–100（法语的坑）",
+    cards:[
+     {fr:"70 = soixante-dix",zh:"字面「60+10」",tip:"法语没有单独的70",say:"soixante-dix"},
+     {fr:"80 = quatre-vingts",zh:"字面「4×20」",say:"quatre-vingts"},
+     {fr:"90 = quatre-vingt-dix",zh:"字面「4×20+10」",say:"quatre-vingt-dix"}
+    ],
+    quiz:[
+     {q:"80 怎么说？",o:["huitante","quatre-vingts","octante"],a:1,ex:"法国法语用 4×20。"},
+     {q:"70 = ?",o:["septante","soixante-dix"],a:1}
+    ]},
+   {id:"l73",title:"时间 l'heure",
+    cards:[
+     {fr:"Quelle heure est-il ?",zh:"几点了？",say:"Quelle heure est-il ?"},
+     {fr:"Il est trois heures.",zh:"3点了。",tip:"Il est + 数字 + heure(s)",say:"Il est trois heures."},
+     {fr:"Il est midi / minuit.",zh:"中午12点 / 午夜12点",say:"Il est midi, il est minuit."}
+    ],
+    quiz:[
+     {q:"「几点了」？",o:["Quelle heure est-il ?","Où est-il ?"],a:0},
+     {q:"midi 指？",o:["午夜","中午12点","早晨"],a:1}
+    ]},
+   {id:"l74",title:"星期·月份·日期",
+    cards:[
+     {fr:"lundi mardi mercredi jeudi vendredi samedi dimanche",zh:"周一到周日",say:"lundi, mardi, mercredi, jeudi, vendredi"},
+     {fr:"janvier février mars ...",zh:"一月二月三月…",say:"janvier, février, mars, avril"},
+     {fr:"le 14 juillet",zh:"7月14日（日+月，不用序数）",tip:"日期：le + 数字 + 月份",say:"le quatorze juillet"}
+    ],
+    quiz:[
+     {q:"「周一」？",o:["dimanche","lundi","samedi"],a:1},
+     {q:"日期「5月3日」结构？",o:["le 3 mai","mai le 3","3rd mai"],a:0}
+    ]}
+ ]},
+
+ {id:"u8",title:"实用主题与场景",desc:"家庭·点餐·购物·计划",lessons:[
+   {id:"l81",title:"家庭 la famille",
+    cards:[
+     {fr:"le père · la mère · les parents",zh:"爸爸·妈妈·父母",say:"le père, la mère, les parents"},
+     {fr:"le frère · la sœur",zh:"哥/弟 · 姐/妹",say:"le frère, la sœur"},
+     {fr:"le fils · la fille",zh:"儿子 · 女儿/女孩",say:"le fils, la fille"}
+    ],
+    quiz:[
+     {q:"sœur 是？",o:["兄弟","姐妹","母亲"],a:1},
+     {q:"「父母」？",o:["les parents","les enfants"],a:0}
+    ]},
+   {id:"l82",title:"餐厅点餐",
+    cards:[
+     {fr:"Je voudrais un café, s'il vous plaît.",zh:"我想要一杯咖啡，谢谢。",tip:"Je voudrais = 我想要（礼貌）",say:"Je voudrais un café, s'il vous plaît."},
+     {fr:"L'addition, s'il vous plaît.",zh:"请结账。",say:"L'addition, s'il vous plaît."}
+    ],
+    quiz:[
+     {q:"点餐礼貌说「我想要」？",o:["Je veux","Je voudrais"],a:1,ex:"Je voudrais 更礼貌。"},
+     {q:"「结账」？",o:["L'addition","Le menu"],a:0}
+    ]},
+   {id:"l83",title:"购物与问路",
+    cards:[
+     {fr:"C'est combien ?",zh:"多少钱？",say:"C'est combien ?"},
+     {fr:"Où est la gare ?",zh:"火车站在哪里？",say:"Où est la gare ?"},
+     {fr:"à gauche · à droite · tout droit",zh:"左 · 右 · 直走",say:"à gauche, à droite, tout droit"}
+    ],
+    quiz:[
+     {q:"「多少钱」？",o:["C'est combien ?","Quelle heure ?"],a:0},
+     {q:"「直走」？",o:["à gauche","tout droit","à droite"],a:1}
+    ]},
+   {id:"l84",title:"最近将来时 futur proche",
+    cards:[
+     {fr:"aller + 动词原形 = 即将做某事",zh:"Je vais manger. 我要去吃饭。",tip:"和英语 going to 一样",say:"Je vais manger."},
+     {fr:"Nous allons voyager.",zh:"我们将要旅行。",say:"Nous allons voyager."}
+    ],
+    quiz:[
+     {q:"「我要去吃饭」结构？",o:["je vais manger","je mange aller"],a:0,ex:"aller 变位 + 动词原形。"},
+     {q:"futur proche 相当于英语？",o:["going to 将要","-ed 过去"],a:0}
+    ]}
+ ]}
+];
+
+/* ============ 应用逻辑 ============ */
+var app=document.getElementById("app");
+var titleEl=document.getElementById("title");
+var backEl=document.getElementById("back");
+var nav="home";
+var stack=[];
+
+function totals(){
+  var tQ=0,done=0,lessons=0,dl=0;
+  UNITS.forEach(function(u){u.lessons.forEach(function(l){lessons++;l.quiz.forEach(function(){tQ++});if(DB.scores[l.id])dl++;});});
+  var ans=0,cor=0;
+  Object.keys(DB.scores).forEach(function(k){ans+=DB.scores[k].total;cor+=DB.scores[k].correct;});
+  return {tQ:tQ,lessons:lessons,doneLessons:dl,ans:ans,cor:cor,mastery:ans?Math.round(cor/ans*100):0};
+}
+function daysLeft(){var e=new Date("2026-12-31");return Math.max(0,Math.round((e-new Date())/864e5));}
+
+function setHeader(t,showBack){titleEl.textContent=t;backEl.style.display=showBack?"block":"none";}
+
+backEl.onclick=function(){if(stack.length){var f=stack.pop();f();}};
+document.querySelectorAll(".footer button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll(".footer button").forEach(function(x){x.classList.remove("active")});
+    b.classList.add("active");nav=b.dataset.nav;stack=[];
+    if(nav==="home")renderHome();
+    else if(nav==="vocab")renderVocab();
+    else if(nav==="grammar")renderGrammar();
+    else if(nav==="review")renderReview();
+  };
+});
+
+function renderHome(){
+  setHeader("法语 A1 课堂",false);
+  var t=totals();
+  var h='<div class="card"><div class="stat-grid">';
+  h+='<div class="stat"><div class="v">'+daysLeft()+'</div><div class="l">距年底</div></div>';
+  h+='<div class="stat"><div class="v">'+t.doneLessons+'/'+t.lessons+'</div><div class="l">课程</div></div>';
+  h+='<div class="stat"><div class="v">'+t.mastery+'%</div><div class="l">掌握度</div></div>';
+  h+='<div class="stat"><div class="v">'+t.ans+'</div><div class="l">已练题</div></div>';
+  h+='</div><div class="prog"><span style="width:'+Math.round(t.doneLessons/t.lessons*100)+'%"></span></div></div>';
+  UNITS.forEach(function(u,i){
+    var ld=u.lessons.filter(function(l){return DB.scores[l.id]}).length;
+    var allDone=ld===u.lessons.length;
+    h+='<div class="unit" data-act="unit" data-i="'+i+'">';
+    h+='<div class="num '+(allDone?"done":"")+'">'+(allDone?"✓":(i+1))+'</div>';
+    h+='<div class="t"><div class="ti">'+u.title+'</div><div class="ds">'+u.desc+' · '+ld+'/'+u.lessons.length+'</div></div>';
+    h+='<div style="color:var(--muted)">›</div></div>';
+  });
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+
+window.openUnit=function(i){
+  stack.push(renderHome);
+  var u=UNITS[i];setHeader(u.title,true);
+  var h='<div class="card"><span class="tag">单元 '+(i+1)+'</span><div style="font-size:13px;color:var(--muted)">'+u.desc+'</div></div>';
+  u.lessons.forEach(function(l){
+    var sc=DB.scores[l.id];var ok=!!sc;
+    h+='<div class="card" style="padding:0"><div class="lesson" data-act="lesson" data-u="'+i+'" data-l="'+l.id+'">';
+    h+='<div class="dot '+(ok?"ok":"")+'">'+(ok?"✓":"")+'</div>';
+    h+='<div class="lt">'+l.title+'</div>';
+    h+='<div class="pct">'+(sc?Math.round(sc.correct/sc.total*100)+"%":"")+'</div><div style="color:var(--muted)">›</div></div></div>';
+  });
+  app.innerHTML=h;window.scrollTo(0,0);
+};
+
+var cur={uIdx:0,lesson:null,step:0,qi:0,correct:0,wrongList:[]};
+window.openLesson=function(uIdx,lid){
+  var u=UNITS[uIdx];var l=u.lessons.filter(function(x){return x.id===lid})[0];
+  stack.push(function(){openUnit(uIdx)});
+  cur={uIdx:uIdx,lesson:l,step:0,qi:0,correct:0,wrongList:[]};
+  renderCard();
+};
+
+function renderCard(){
+  var l=cur.lesson;var c=l.cards[cur.step];
+  setHeader(l.title,true);
+  var h='<div class="qmeta">学习 '+(cur.step+1)+'/'+l.cards.length+'</div>';
+  h+='<div class="card flash">';
+  h+='<div class="fr">'+c.fr+'</div>';
+  if(c.en)h+='<div class="en">'+c.en+'</div>';
+  h+='<div class="zh">'+c.zh+'</div>';
+  if(c.say)h+='<div><button class="speak" data-act="speak" data-say="'+encodeURIComponent(c.say)+'">🔊 听发音</button></div>';
+  if(c.tip)h+='<div class="tip">💡 '+c.tip+'</div>';
+  h+='</div>';
+  if(cur.step<l.cards.length-1)h+='<button class="btn" data-act="nextcard">下一张 ›</button>';
+  else h+='<button class="btn" data-act="startquiz">开始做题 ✎</button>';
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+window.nextCard=function(){cur.step++;renderCard();};
+window.startQuiz=function(){cur.qi=0;cur.correct=0;cur.wrongList=[];renderQuiz();};
+
+var quizLocked=false;
+function renderQuiz(){
+  quizLocked=false;
+  var l=cur.lesson;var q=l.quiz[cur.qi];
+  setHeader(l.title,true);
+  var h='<div class="qmeta">练习 '+(cur.qi+1)+'/'+l.quiz.length+'</div>';
+  h+='<div class="card"><div class="qtext">'+q.q+'</div>';
+  q.o.forEach(function(opt,i){h+='<button class="opt" data-act="answer" data-i="'+i+'">'+opt+'</button>';});
+  h+='</div>';
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+window.answer=function(i){
+  if(quizLocked)return;quizLocked=true;
+  var l=cur.lesson;var q=l.quiz[cur.qi];var ok=i===q.a;
+  if(ok)cur.correct++;else cur.wrongList.push(q.q);
+  var btns=app.querySelectorAll(".opt");
+  btns.forEach(function(b,idx){b.onclick=null;if(idx===q.a)b.classList.add("right");else if(idx===i)b.classList.add("wrong");});
+  var h='<div class="ex"><b>'+(ok?"✓ 答对了":"✗ 正确答案：" + q.o[q.a])+'</b>'+(q.ex?"<br>"+q.ex:"")+'</div>';
+  if(cur.qi<l.quiz.length-1)h+='<button class="btn" data-act="nextq">下一题 ›</button>';
+  else h+='<button class="btn" data-act="finish">查看成绩</button>';
+  app.insertAdjacentHTML("beforeend",h);
+};
+window.nextQ=function(){cur.qi++;renderQuiz();};
+window.finishLesson=function(){
+  var l=cur.lesson;
+  DB.scores[l.id]={correct:cur.correct,total:l.quiz.length};
+  cur.wrongList.forEach(function(w){if(DB.wrong.indexOf(w)<0)DB.wrong.push(w);});
+  /* 全对则把这些题移出错题库 */
+  if(cur.wrongList.length===0){}
+  persist();
+  var pct=Math.round(cur.correct/l.quiz.length*100);
+  var grade=pct>=80?"掌握得很好 👍":pct>=50?"基本掌握，建议复习":"需要重学一遍";
+  setHeader(l.title,true);
+  var nextL=findNextLesson();
+  var h='<div class="card res"><div class="qmeta">本课成绩</div><div class="big">'+pct+'%</div>';
+  h+='<div>答对 '+cur.correct+'/'+l.quiz.length+' · '+grade+'</div></div>';
+  if(nextL)h+='<button class="btn" data-act="lesson" data-u="'+nextL.uIdx+'" data-l="'+nextL.lid+'">继续下一课 ›</button>';
+  h+='<button class="btn ghost" data-act="home">回到首页</button>';
+  app.innerHTML=h;window.scrollTo(0,0);
+};
+function findNextLesson(){
+  for(var i=0;i<UNITS.length;i++){for(var j=0;j<UNITS[i].lessons.length;j++){
+    if(!DB.scores[UNITS[i].lessons[j].id])return {uIdx:i,lid:UNITS[i].lessons[j].id};
+  }}
+  return null;
+}
+window.setFooter=function(n){
+  document.querySelectorAll(".footer button").forEach(function(x){x.classList.toggle("active",x.dataset.nav===n)});
+  stack=[];
+};
+
+/* ===== 词汇表 ===== */
+function renderVocab(){
+  setHeader("词汇表",false);stack=[];
+  var h='<div class="card"><div style="font-size:13px;color:var(--muted)">点 🔊 听每个词的法语发音</div></div>';
+  UNITS.forEach(function(u){
+    var words=[];
+    u.lessons.forEach(function(l){l.cards.forEach(function(c){if(c.say)words.push(c);});});
+    h+='<h2 class="sec">'+u.title+'</h2><div class="card">';
+    words.forEach(function(c){
+      h+='<div class="word"><div class="l"><b>'+c.fr+'</b><span>'+c.zh+'</span></div>';
+      h+='<button class="mini" data-act="speak" data-say="'+encodeURIComponent(c.say)+'">🔊</button></div>';
+    });
+    h+='</div>';
+  });
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+
+/* ===== 语法速查 ===== */
+function renderGrammar(){
+  setHeader("语法速查",false);stack=[];
+  var h='';
+  h+='<h2 class="sec">être（是）</h2><table class="ref"><tr><th>人称</th><th>变位</th></tr>'+
+     '<tr><td>je</td><td>suis</td></tr><tr><td>tu</td><td>es</td></tr><tr><td>il/elle</td><td>est</td></tr>'+
+     '<tr><td>nous</td><td>sommes</td></tr><tr><td>vous</td><td>êtes</td></tr><tr><td>ils/elles</td><td>sont</td></tr></table>';
+  h+='<h2 class="sec">avoir（有）</h2><table class="ref"><tr><th>人称</th><th>变位</th></tr>'+
+     '<tr><td>j\'</td><td>ai</td></tr><tr><td>tu</td><td>as</td></tr><tr><td>il/elle</td><td>a</td></tr>'+
+     '<tr><td>nous</td><td>avons</td></tr><tr><td>vous</td><td>avez</td></tr><tr><td>ils/elles</td><td>ont</td></tr></table>';
+  h+='<h2 class="sec">-er 动词词尾（如 parler）</h2><table class="ref"><tr><th>人称</th><th>词尾</th></tr>'+
+     '<tr><td>je</td><td>-e</td></tr><tr><td>tu</td><td>-es</td></tr><tr><td>il</td><td>-e</td></tr>'+
+     '<tr><td>nous</td><td>-ons</td></tr><tr><td>vous</td><td>-ez</td></tr><tr><td>ils</td><td>-ent</td></tr></table>';
+  h+='<h2 class="sec">冠词</h2><table class="ref"><tr><th></th><th>阳性</th><th>阴性</th><th>复数</th></tr>'+
+     '<tr><td>定(这)</td><td>le</td><td>la</td><td>les</td></tr>'+
+     '<tr><td>不定(一个)</td><td>un</td><td>une</td><td>des</td></tr></table>';
+  h+='<h2 class="sec">所有格</h2><table class="ref"><tr><th></th><th>阳</th><th>阴</th><th>复</th></tr>'+
+     '<tr><td>我的</td><td>mon</td><td>ma</td><td>mes</td></tr>'+
+     '<tr><td>你的</td><td>ton</td><td>ta</td><td>tes</td></tr>'+
+     '<tr><td>他/她的</td><td>son</td><td>sa</td><td>ses</td></tr></table>';
+  h+='<h2 class="sec">否定与疑问</h2><div class="card" style="font-size:14px">'+
+     '否定：<b>ne</b> + 动词 + <b>pas</b>（元音前 ne→n\'）<br>'+
+     '提问：①句尾升调 ②Est-ce que… ③主谓倒装<br>'+
+     '疑问词：qui谁 / que什么 / où哪里 / quand何时 / comment怎样 / pourquoi为什么 / combien多少</div>';
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+
+/* ===== 错题复习 ===== */
+function renderReview(){
+  setHeader("错题复习",false);stack=[];
+  var allWrongQ=[];
+  UNITS.forEach(function(u){u.lessons.forEach(function(l){l.quiz.forEach(function(q){if(DB.wrong.indexOf(q.q)>=0)allWrongQ.push(q);});});});
+  if(!allWrongQ.length){app.innerHTML='<div class="card res"><div style="font-size:40px">🎉</div><div>暂时没有错题，继续保持！</div></div>';return;}
+  reviewQueue=allWrongQ.slice();reviewIdx=0;
+  renderReviewQ();
+}
+var reviewQueue=[],reviewIdx=0;
+function renderReviewQ(){
+  if(reviewIdx>=reviewQueue.length){
+    app.innerHTML='<div class="card res"><div class="big">✓</div><div>复习完成！答对的题已从错题库移除。</div></div>'+
+      '<button class="btn" data-act="review">再复习一遍</button>';return;
+  }
+  var q=reviewQueue[reviewIdx];
+  quizLocked=false;
+  var h='<div class="qmeta">错题复习 '+(reviewIdx+1)+'/'+reviewQueue.length+'</div>';
+  h+='<div class="card"><div class="qtext">'+q.q+'</div>';
+  q.o.forEach(function(opt,i){h+='<button class="opt" data-act="ansreview" data-i="'+i+'">'+opt+'</button>';});
+  h+='</div>';
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+window.ansReview=function(i){
+  if(quizLocked)return;quizLocked=true;
+  var q=reviewQueue[reviewIdx];var ok=i===q.a;
+  var btns=app.querySelectorAll(".opt");
+  btns.forEach(function(b,idx){b.onclick=null;if(idx===q.a)b.classList.add("right");else if(idx===i)b.classList.add("wrong");});
+  if(ok){var p=DB.wrong.indexOf(q.q);if(p>=0)DB.wrong.splice(p,1);persist();}
+  var h='<div class="ex"><b>'+(ok?"✓ 答对了，移出错题库":"✗ 正确：" + q.o[q.a])+'</b>'+(q.ex?"<br>"+q.ex:"")+'</div>';
+  h+='<button class="btn" data-act="nextreview">下一题 ›</button>';
+  app.insertAdjacentHTML("beforeend",h);
+};
+window.nextReview=function(){reviewIdx++;renderReviewQ();};
+
+/* ===== 事件委托：兼容禁用内联事件的沙箱环境 ===== */
+document.addEventListener("click",function(e){
+  var el=e.target.closest?e.target.closest("[data-act]"):null;
+  if(!el)return;
+  var a=el.getAttribute("data-act");
+  if(a==="unit"){openUnit(+el.getAttribute("data-i"));}
+  else if(a==="lesson"){openLesson(el.getAttribute("data-u"),el.getAttribute("data-l"));}
+  else if(a==="speak"){speak(decodeURIComponent(el.getAttribute("data-say")));}
+  else if(a==="nextcard"){nextCard();}
+  else if(a==="startquiz"){startQuiz();}
+  else if(a==="answer"){answer(+el.getAttribute("data-i"));}
+  else if(a==="nextq"){nextQ();}
+  else if(a==="finish"){finishLesson();}
+  else if(a==="home"){renderHome();setFooter("home");}
+  else if(a==="ansreview"){ansReview(+el.getAttribute("data-i"));}
+  else if(a==="nextreview"){nextReview();}
+  else if(a==="review"){renderReview();}
+});
+
+renderHome();
+</script>
+</body>
+</html>
